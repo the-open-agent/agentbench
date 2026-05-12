@@ -1,0 +1,6 @@
+# AgentBench core dependencies
+# All core functionality uses Python standard library only.
+# The following are optional enhancements:
+
+# Required only if you use YAML-format datasets (e.g. legacy hardchat tasks.yaml)
+pyyaml>=6.0

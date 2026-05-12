@@ -1,0 +1,40 @@
+{"id": "fmt_json_01", "category": "format", "prompt": "Output JSON only with keys city and population. Use Tokyo and 14000000.", "format_type": "json_keys", "expected_keys": ["city", "population"], "fact_patterns": ["Tokyo", "14000000"], "must_patterns": ["^{"]}
+{"id": "fmt_json_02", "category": "format", "prompt": "Output JSON only with keys name and age. Use Alice and 30.", "format_type": "json_keys", "expected_keys": ["name", "age"], "fact_patterns": ["Alice", "30"], "must_patterns": ["^{"]}
+{"id": "fmt_json_03", "category": "format", "prompt": "Return a JSON object with language and creator. Use Go and Robert Griesemer.", "format_type": "json_keys", "expected_keys": ["language", "creator"], "fact_patterns": ["Go", "Robert"], "must_patterns": ["^{"]}
+{"id": "fmt_json_04", "category": "format", "prompt": "Output JSON object with product and price. Use keyboard and 199.", "format_type": "json_keys", "expected_keys": ["product", "price"], "fact_patterns": ["keyboard", "199"], "must_patterns": ["^{"]}
+{"id": "fmt_json_05", "category": "format", "prompt": "Output JSON array only with even numbers: 2,4,6.", "format_type": "json_array", "fact_patterns": ["2", "4", "6"], "must_patterns": ["^\\["]}
+{"id": "fmt_json_06", "category": "format", "prompt": "Output JSON object with status and ok. Use success and true.", "format_type": "json_keys", "expected_keys": ["status", "ok"], "fact_patterns": ["success", "true"], "must_patterns": ["^{"]}
+{"id": "fmt_json_07", "category": "format", "prompt": "Output JSON only with keys x,y,z and values 1,2,3.", "format_type": "json_keys", "expected_keys": ["x", "y", "z"], "fact_patterns": ["1", "2", "3"], "must_patterns": ["^{"]}
+{"id": "fmt_json_08", "category": "format", "prompt": "Return JSON object with title and done. Use taskA and false.", "format_type": "json_keys", "expected_keys": ["title", "done"], "fact_patterns": ["taskA", "false"], "must_patterns": ["^{"]}
+{"id": "fact_01", "category": "factual", "prompt": "What is the capital of France? Reply with city only.", "format_type": "text", "expected_answer_regex": "(?i)paris"}
+{"id": "fact_02", "category": "factual", "prompt": "What is water boiling point in Celsius at 1 atm?", "format_type": "text", "expected_answer_regex": "100"}
+{"id": "fact_03", "category": "factual", "prompt": "What is 2 to the power of 10?", "format_type": "text", "expected_answer_regex": "1024"}
+{"id": "fact_04", "category": "factual", "prompt": "How many days are in one year approximately?", "format_type": "text", "expected_answer_regex": "365"}
+{"id": "fact_05", "category": "factual", "prompt": "What is the capital of China?", "format_type": "text", "expected_answer_regex": "(?i)beijing"}
+{"id": "fact_06", "category": "factual", "prompt": "What is the chemical symbol of oxygen?", "format_type": "text", "expected_answer_regex": "^\\s*O\\s*$|oxygen.*O"}
+{"id": "fact_07", "category": "factual", "prompt": "How many days are in a week?", "format_type": "text", "expected_answer_regex": "7"}
+{"id": "fact_08", "category": "factual", "prompt": "Approximate speed of light in km/s (integer).", "format_type": "text", "expected_answer_regex": "299792|300000"}
+{"id": "inst_01", "category": "instruction", "prompt": "Output exactly 3 words separated by comma about spring.", "format_type": "text", "must_patterns": [","], "item_count": 3}
+{"id": "inst_02", "category": "instruction", "prompt": "Answer in one English sentence within 10 words: What is AI?", "format_type": "text", "max_words": 10, "must_patterns": ["[A-Za-z]"]}
+{"id": "inst_03", "category": "instruction", "prompt": "Output only PASS or FAIL. No explanation.", "format_type": "text", "expected_answer_regex": "^(PASS|FAIL)$"}
+{"id": "inst_04", "category": "instruction", "prompt": "Give me 2 suggestions, each line starts with '- '.", "format_type": "text", "line_prefix": "- ", "item_count": 2}
+{"id": "inst_05", "category": "instruction", "prompt": "Translate 'OpenAgent is easy to use' into Spanish. Output the translation only.", "format_type": "text", "must_patterns": ["OpenAgent", "(?i)fácil|facil|usar|sencill[oa]|simple"]}
+{"id": "inst_06", "category": "instruction", "prompt": "Output a title within 6 characters about efficiency.", "format_type": "text", "max_chars": 6}
+{"id": "inst_07", "category": "instruction", "prompt": "Use digits only: 12*8=?", "format_type": "text", "expected_answer_regex": "^\\s*96\\s*$"}
+{"id": "inst_08", "category": "instruction", "prompt": "Output JSON only, no markdown code block. key result=ok.", "format_type": "json_keys", "expected_keys": ["result"], "fact_patterns": ["ok"], "forbid_patterns": ["```"]}
+{"id": "read_01", "category": "readability", "prompt": "Rewrite this to be smoother: The product is good but expensive so think about it.", "format_type": "text", "min_chars": 20, "max_chars": 180}
+{"id": "read_02", "category": "readability", "prompt": "Write a 30-60 character note introducing the Pomodoro method.", "format_type": "text", "min_chars": 30, "max_chars": 90}
+{"id": "read_03", "category": "readability", "prompt": "Explain what a CPU cache is in plain English in 1-2 sentences.", "format_type": "text", "min_chars": 18, "max_chars": 220}
+{"id": "read_04", "category": "readability", "prompt": "Rewrite 'Submit ASAP' in a polite style.", "format_type": "text", "min_chars": 10, "max_chars": 110}
+{"id": "read_05", "category": "readability", "prompt": "Write one encouraging sentence to a teammate (keep it brief, roughly one short line).", "format_type": "text", "min_chars": 8, "max_chars": 55}
+{"id": "read_06", "category": "readability", "prompt": "Write one meeting summary sentence with a clear next action.", "format_type": "text", "min_chars": 12, "max_chars": 140}
+{"id": "read_07", "category": "readability", "prompt": "Explain technical debt for non-tech audience in one sentence.", "format_type": "text", "min_chars": 12, "max_chars": 140}
+{"id": "read_08", "category": "readability", "prompt": "Rewrite 'This plan has issues' in a constructive way.", "format_type": "text", "min_chars": 10, "max_chars": 140}
+{"id": "comp_01", "category": "completion", "prompt": "Create a study plan with today/this week/this month sections.", "format_type": "text", "must_patterns": ["today", "week", "month"]}
+{"id": "comp_02", "category": "completion", "prompt": "List 3 ways to reduce meeting time.", "format_type": "text", "item_count": 3}
+{"id": "comp_03", "category": "completion", "prompt": "Compare REST and GraphQL with one advantage each.", "format_type": "text", "must_patterns": ["REST", "GraphQL"]}
+{"id": "comp_04", "category": "completion", "prompt": "Draft a leave email template within 80 chars.", "format_type": "text", "min_chars": 20, "max_chars": 80}
+{"id": "comp_05", "category": "completion", "prompt": "Design a weekly report template including goals/progress/risks.", "format_type": "text", "must_patterns": ["goal|goals", "progress", "risk|risks"]}
+{"id": "comp_06", "category": "completion", "prompt": "Provide two interview self-introduction opening sentences.", "format_type": "text", "item_count": 2}
+{"id": "comp_07", "category": "completion", "prompt": "Explain steps to prepare a 10-minute tech talk.", "format_type": "text", "min_chars": 30}
+{"id": "comp_08", "category": "completion", "prompt": "Write one product slogan highlighting stable and efficient.", "format_type": "text", "must_patterns": ["stable|stability", "efficient|efficiency"]}

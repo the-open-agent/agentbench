@@ -216,3 +216,34 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ============================================
+# AgentBench specific
+# ============================================
+
+# Auto-generated benchmark results (auto-created by runner.py, no need to commit)
+results/
+
+# Local log files that may contain server paths or tool call traces
+*.log
+logs/
+openagent.log
+openagent_console.log
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+secrets.toml
+*.key
+*.pem
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary / backup files
+*.tmp
+*.bak
+*.swp
+*~
