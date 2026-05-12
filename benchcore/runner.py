@@ -58,9 +58,11 @@ def run_benchmark(
                         provider_key=provider_key,
                         timeout_s=timeout_s,
                     )
-                    best = rec
                     if rec.ok:
+                        best = rec
                         break
+                    if best is None:
+                        best = rec
                 if best is not None:
                     records.append(best)
                     print(

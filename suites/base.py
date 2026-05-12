@@ -11,7 +11,7 @@ class SuiteBase(ABC):
 
     @abstractmethod
     def load_tasks(self) -> list[dict[str, Any]]:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def run_task(
@@ -24,4 +24,4 @@ class SuiteBase(ABC):
         provider_key: str,
         timeout_s: int,
     ) -> RunRecord:
-        raise NotImplementedError
+        ...
