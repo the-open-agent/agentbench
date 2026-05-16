@@ -17,6 +17,45 @@ class HttpResult:
     error: str | None
 
 
+def chat_completion(
+    base_url: str,
+    model: str,
+    prompt: str,
+    provider_key: str,
+    timeout_s: int,
+) -> dict[str, Any]:
+    url = base_url.rstrip("/") + "/api/chat/completions"
+    payload = {
+        "model": model,
+        "stream": False,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    t0 = time.time()
+    result = post_json(url, payload, {"Authorization": f"Bearer {provider_key}"}, timeout_s)
+    t1 = time.time()
+
+    parsed = None
+    parse_error = None
+    assistant_text = ""
+    usage = {}
+    try:
+        parsed = json.loads(result.text)
+        usage = parsed.get("usage") or {}
+        assistant_text = parsed["choices"][0]["message"]["content"] or ""
+    except Exception as exc:
+        parse_error = str(exc)
+
+    return {
+        "latency_ms": int((t1 - t0) * 1000),
+        "ok": result.ok and parse_error is None,
+        "status": result.status,
+        "error": result.error,
+        "parse_error": parse_error,
+        "assistant_text": assistant_text,
+        "usage": usage,
+    }
+
+
 def health_check(base_url: str, timeout_s: int = 5) -> HttpResult:
     req = Request(url=base_url.rstrip("/") + "/api/health", method="GET")
     t0 = time.time()

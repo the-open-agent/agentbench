@@ -1,0 +1,4 @@
+{"id": "consistent_math", "category": "reliability", "prompt": "Calculate 12345 * 67890. Show only the final number.", "expected_answer_regex": "838102050", "repeat_count": 5}
+{"id": "consistent_format_json", "category": "reliability", "prompt": "Return a JSON object with exactly two keys: \"name\" (string) and \"age\" (number). Example: {\"name\": \"Alice\", \"age\": 30}", "format_type": "json_keys", "expected_keys": ["name", "age"], "repeat_count": 5}
+{"id": "consistent_fact", "category": "reliability", "prompt": "What is the capital city of Japan? Answer with one word only.", "expected_answer_regex": "Tokyo", "repeat_count": 5}
+{"id": "long_output_stability", "category": "reliability", "prompt": "Write a 200-word story about a robot learning to paint. Do not stop early.", "min_chars": 800, "repeat_count": 3}

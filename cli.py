@@ -8,13 +8,31 @@ from .benchcore.runner import run_benchmark
 from .suites.baseperf import BasePerfSuite
 from .suites.dialogue import DialogueSuite
 from .suites.hardchat import HardChatSuite
+from .suites.memory import MemorySuite
+from .suites.reliability import ReliabilitySuite
+from .suites.startup import StartupSuite
+from .suites.throughput import ThroughputSuite
 from .suites.tool import ToolSuite
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="AgentBench unified CLI")
     parser.add_argument("command", choices=["run"], help="Subcommand: run")
-    parser.add_argument("--suite", default="all", choices=["baseperf", "dialogue", "hardchat", "tool", "all"])
+    parser.add_argument(
+        "--suite",
+        default="all",
+        choices=[
+            "baseperf",
+            "dialogue",
+            "hardchat",
+            "memory",
+            "reliability",
+            "startup",
+            "throughput",
+            "tool",
+            "all",
+        ],
+    )
     parser.add_argument("--base-url", default="http://127.0.0.1:14000")
     parser.add_argument("--model", default="deepseek/deepseek-v4-flash")
     parser.add_argument("--provider-key", default=os.environ.get("OPENAGENT_PROVIDER_KEY", ""))
@@ -36,6 +54,10 @@ def main() -> int:
         "baseperf": BasePerfSuite(root),
         "dialogue": DialogueSuite(root),
         "hardchat": HardChatSuite(root),
+        "memory": MemorySuite(root),
+        "reliability": ReliabilitySuite(root),
+        "startup": StartupSuite(root),
+        "throughput": ThroughputSuite(root),
         "tool": ToolSuite(root),
     }
     suites = list(suite_map.values()) if args.suite == "all" else [suite_map[args.suite]]

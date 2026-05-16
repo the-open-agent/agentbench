@@ -1,0 +1,4 @@
+{"id": "single_request_baseline", "category": "throughput", "prompt": "Say 'hello' and nothing else.", "concurrency": 1, "requests_per_concurrency": 3}
+{"id": "light_concurrent_2", "category": "throughput", "prompt": "Count from 1 to 5.", "concurrency": 2, "requests_per_concurrency": 3}
+{"id": "medium_concurrent_4", "category": "throughput", "prompt": "List three colors.", "concurrency": 4, "requests_per_concurrency": 3}
+{"id": "stress_concurrent_8", "category": "throughput", "prompt": "What is the capital of France? Answer in one word.", "concurrency": 8, "requests_per_concurrency": 3}

@@ -41,7 +41,7 @@ The framework relies solely on the Python standard library (with only optional `
 
 | Feature | Description |
 |---------|-------------|
-| **Four benchmark suites** | `baseperf` (performance baseline), `dialogue` (dialogue quality), `hardchat` (complex long-horizon tasks), `tool` (tool invocation validation) |
+| **Eight benchmark suites** | `baseperf` (performance baseline), `dialogue` (dialogue quality), `hardchat` (complex long-horizon tasks), `tool` (tool invocation validation), `startup` (health-check latency), `memory` (context length & stability), `throughput` (concurrent load), `reliability` (consistency & format) |
 | **Multi-round & retry** | Supports `--rounds` multi-round testing and `--max-attempts` retry on failure for more stable results |
 | **Automated reports** | Each run auto-generates `report.md`, `summary.json`, and `details.jsonl`, including a 95% Bootstrap confidence interval |
 | **Server-side log verification** | For the Tool suite, optionally cross-checks invocation traces against OpenAgent server logs |
@@ -89,6 +89,41 @@ The framework relies solely on the Python standard library (with only optional `
   - Check that required tool names appear in `evidence.tool_calls`.
   - **(Optional) Server-side log verification**: scan OpenAgent's `openagent.log` and console output to cross-check invocation traces.
 - **Covered tool types**: `web_search`, `web_fetch`, `shell`, `local_text_write`, `browser_use_open`, `browser_use_snapshot`, etc.
+
+### 5. Startup (Health-Check Latency Baseline)
+
+- **Goal**: measure health-check endpoint latency under different preconditions (first check vs. after a warm-up check).
+- **Dataset**: `datasets/startup/dataset.jsonl`
+- **Validation logic**: verify that the health-check endpoint responds successfully within the timeout.
+- **Output metrics**: health-check latency (ms), success rate.
+- **Note**: this suite measures latency of the `/health` endpoint on an already-running service; it does **not** restart the OpenAgent process.
+
+### 6. Memory (Context Length & Stability)
+
+- **Goal**: evaluate the agent's ability to handle varying context lengths (1K / 4K / 8K tokens) and maintain stable responses under repeated identical prompts.
+- **Dataset**: `datasets/memory/dataset.jsonl`
+- **Validation logic**: verify HTTP success, valid JSON parsing, and non-empty assistant output across all repeats.
+- **Output metrics**: average latency per context size, token consumption, repeat stability rate.
+- **Typical tasks**: short-context summarization, medium-context key-point extraction, long-context document summary, repeated-prompt stability check.
+
+### 7. Throughput (Concurrent Load Testing)
+
+- **Goal**: stress-test the agent under concurrent load to measure throughput (requests per second) and latency degradation.
+- **Dataset**: `datasets/throughput/dataset.jsonl`
+- **Validation logic**: all concurrent requests must succeed; partial failures are flagged.
+- **Output metrics**: throughput (RPS), average/min/max latency across concurrent requests, total execution time.
+- **Typical tasks**: single-request baseline, light concurrency (2), medium concurrency (4), stress concurrency (8).
+
+### 8. Reliability (Repeat-Run Format & Rule Compliance)
+
+- **Goal**: validate that repeated identical prompts satisfy format rules and factual constraints on every run.
+- **Dataset**: `datasets/reliability/dataset.jsonl`
+- **Validation logic**:
+  - **Fact matching**: verify expected answer via regular expressions.
+  - **Format check**: validate JSON object structure and mandatory keys.
+  - **Length check**: ensure long-output tasks meet minimum character thresholds.
+- **Output metrics**: rule-compliance rate (passes / total repeats), format compliance rate, average latency.
+- **Note**: "consistency" here means "passes the same validation rules on every repeat", not "answers are byte-for-byte identical".
 
 ---
 
@@ -142,6 +177,12 @@ python -m agentbench run --suite tool --provider-key $OPENAGENT_PROVIDER_KEY
 
 # Run only the dialogue quality suite
 python -m agentbench run --suite dialogue --provider-key $OPENAGENT_PROVIDER_KEY
+
+# Run system-level benchmarks (startup, memory, throughput, reliability)
+python -m agentbench run --suite startup --provider-key $OPENAGENT_PROVIDER_KEY
+python -m agentbench run --suite memory --provider-key $OPENAGENT_PROVIDER_KEY
+python -m agentbench run --suite throughput --provider-key $OPENAGENT_PROVIDER_KEY
+python -m agentbench run --suite reliability --provider-key $OPENAGENT_PROVIDER_KEY
 ```
 
 > **Tip**: `--provider-key` can also be passed via the `OPENAGENT_PROVIDER_KEY` environment variable to avoid exposing secrets on the command line.
@@ -181,7 +222,7 @@ session-20260512-143052-a1b2c3d4/
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `command` | `run` | Subcommand; currently only `run` is supported |
-| `--suite` | `all` | Select benchmark suite: `baseperf`, `dialogue`, `hardchat`, `tool`, `all` |
+| `--suite` | `all` | Select benchmark suite: `baseperf`, `dialogue`, `hardchat`, `tool`, `startup`, `memory`, `throughput`, `reliability`, `all` |
 | `--base-url` | `http://127.0.0.1:14000` | OpenAgent service URL |
 | `--model` | `deepseek/deepseek-v4-flash` | Model name |
 | `--provider-key` | `$OPENAGENT_PROVIDER_KEY` | API key |
@@ -207,6 +248,10 @@ agentbench/
 │   ├── baseperf.py             # Performance baseline suite
 │   ├── dialogue.py             # Dialogue quality suite
 │   ├── hardchat.py             # Complex long-horizon task suite
+│   ├── memory.py               # Context length & stability suite
+│   ├── reliability.py          # Consistency & format stability suite
+│   ├── startup.py              # Service startup performance suite
+│   ├── throughput.py           # Concurrent load testing suite
 │   ├── tool.py                 # Tool invocation validation suite
 │   ├── easychat_common.py      # Shared logic for BasePerf / Dialogue
 │   └── openagent_log_verify.py # OpenAgent server-side log cross-check
@@ -214,6 +259,10 @@ agentbench/
 │   ├── baseperf/dataset.jsonl
 │   ├── dialogue/dataset.jsonl
 │   ├── hardchat/tasks.jsonl
+│   ├── memory/dataset.jsonl
+│   ├── reliability/dataset.jsonl
+│   ├── startup/dataset.jsonl
+│   ├── throughput/dataset.jsonl
 │   └── tool/dataset.jsonl
 ├── cli.py                      # CLI entry point
 ├── __main__.py                 # `python -m agentbench` entry point
@@ -238,6 +287,10 @@ All datasets use the **JSON Lines** format (one JSON object per line) for easy s
 | `dialogue` | 32 | format / factual / instruction / readability | Split from baseperf; focused on dialogue quality evaluation |
 | `hardchat` | 6 | web_search / web_fetch / shell / file_ops / browser / mixed | High-difficulty long-horizon tasks requiring multi-stage structured output |
 | `tool` | 12 | WebSearch / WebFetch / Shell / File / Browser / Mixed | Validates structured output and evidence-chain completeness in tool-calling scenarios |
+| `startup` | 2 | first / warm | Health-check latency baseline on an already-running service (first check vs warm path) |
+| `memory` | 4 | short_context / medium_context / long_context / repeated_prompt | Tests context handling (~1K / ~4K / ~8K tokens, character-length approximation) and repeated-prompt stability |
+| `throughput` | 4 | single / light / medium / stress | Baseline (1x), light (2x), medium (4x), and stress (8x) concurrent load testing |
+| `reliability` | 4 | math / format_json / fact / long_output | Validates answer consistency and format compliance across repeated runs |
 
 Some `tool` tasks use relative paths (e.g. `./scratch/`, `./openagent/logs/`). Create the corresponding directories in the current working directory before running, or modify the paths in `datasets/tool/dataset.jsonl` to suit your environment.
 

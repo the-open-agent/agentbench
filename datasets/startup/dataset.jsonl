@@ -1,0 +1,2 @@
+{"id": "first_check", "category": "startup", "mode": "first", "description": "Measure first health-check latency on an already-running service (baseline after service ready)"}
+{"id": "warm_check", "category": "startup", "mode": "warm", "description": "Measure health-check latency after a previous successful health check (warm path)"}

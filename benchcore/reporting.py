@@ -133,6 +133,14 @@ def build_markdown_report(
             lines.append("- Goal: dialogue quality (format checks, factual match, instruction following)")
         elif suite == "hardchat":
             lines.append("- Goal: multi-stage structured output (collect / normalize / summarize)")
+        elif suite == "memory":
+            lines.append("- Goal: memory and context handling (short/medium/long context stability)")
+        elif suite == "reliability":
+            lines.append("- Goal: reliability and consistency (repeatable correct answers, format stability)")
+        elif suite == "startup":
+            lines.append("- Goal: health-check latency baseline (first check vs warm path, already-running service)")
+        elif suite == "throughput":
+            lines.append("- Goal: throughput under concurrency (requests per second, latency degradation)")
         elif suite == "tool":
             lines.append("- Goal: tool-use evidence and output shape checks (required_tools)")
         lines.append(f"- Rounds: `{data['rounds']}`")
